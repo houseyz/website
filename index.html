@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Housey — Full-service short-term rental management</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=Space+Mono:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sand: #F5F5F5;
+    --sand-deep: #E5E5E5;
+    --paper: #FFFFFF;
+    --ink: #333333;
+    --ink-soft: #666666;
+    --ink-faint: #999999;
+    --green: #FF5A5F;
+    --green-deep: #E14C51;
+    --green-tint: #FBE7E7;
+    --brass: #6E6E6E;
+    --brass-light: #A0A0A0;
+    --line: rgba(51,51,51,0.14);
+    --line-soft: rgba(51,51,51,0.08);
+    --shadow: 0 1px 2px rgba(51,51,51,0.06);
+    --shadow-lift: 0 16px 32px -16px rgba(51,51,51,0.28);
+    --radius-tag: 14px;
+  }
+
+  *{ box-sizing: border-box; }
+  html{ scroll-behavior: smooth; }
+  body{
+    margin:0;
+    background: var(--sand);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+  }
+  h1,h2,h3{
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    line-height: 1.08;
+    margin: 0;
+    letter-spacing: -0.01em;
+  }
+  a{ color: inherit; text-decoration:none; }
+  img{ max-width:100%; display:block; }
+  .eyebrow{
+    font-family:'Inter', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--green-deep);
+    display:flex;
+    align-items:center;
+    gap:10px;
+  }
+  .eyebrow::before{
+    content:"";
+    width: 18px; height:1px;
+    background: var(--brass);
+    display:inline-block;
+  }
+  .wrap{
+    max-width: 1160px;
+    margin: 0 auto;
+    padding: 0 32px;
+  }
+  section{ position:relative; }
+
+  /* focus visibility */
+  a:focus-visible, button:focus-visible{
+    outline: 2px solid var(--green-deep);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{ animation: none !important; transition: none !important; }
+  }
+
+  /* ---------- reveal on scroll ---------- */
+  .reveal{
+    opacity:0;
+    transform: translateY(18px);
+    transition: opacity 0.7s ease, transform 0.7s ease;
+  }
+  .reveal.in{ opacity:1; transform: translateY(0); }
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position: sticky; top:0; z-index: 50;
+    background: #FF5A5F;
+    --nav-house: #FFFFFF;
+    --nav-bg: #FF5A5F;
+    border-bottom: 1px solid rgba(255,255,255,0.15);
+  }
+  header.nav .logo{ color: #FFFFFF; }
+  header.nav .nav-links a{ color: rgba(255,255,255,0.82); }
+  header.nav .nav-links a:hover{ color: #FFFFFF; }
+  header.nav .nav-cta{ background:#FFFFFF; color:#FF5A5F !important; }
+  header.nav .nav-cta:hover{ background:#F0F0F0; }
+  .nav-inner{
+    max-width:1160px; margin:0 auto; padding: 18px 32px;
+    display:flex; align-items:center; justify-content:space-between;
+  }
+  .logo{
+    font-family:'Poppins', sans-serif;
+    font-weight:700; font-size: 22px;
+    display:flex; align-items:center; gap:9px;
+  }
+  .logo .dot{ display:none; }
+  .logo-mark{ flex-shrink:0; }
+  header.nav .logo-mark .house{ fill: var(--nav-house, #FF5A5F); }
+  header.nav .logo-mark .keyhole{ fill: var(--nav-bg, #FFFFFF); }
+  footer .logo-mark .house{ fill: #FF5A5F; }
+  footer .logo-mark .keyhole{ fill: var(--sand); }
+  .nav-links{ display:flex; align-items:center; gap: 34px; }
+  .nav-links a{
+    font-size: 14.5px; color: var(--ink-soft); font-weight:500;
+  }
+  .nav-links a:hover{ color: var(--green-deep); }
+  .nav-cta{
+    background: var(--green);
+    color: var(--paper) !important;
+    padding: 10px 20px;
+    border-radius: 999px;
+    font-size: 14px; font-weight:600;
+    transition: background 0.2s ease, transform 0.2s ease;
+  }
+  .nav-cta:hover{ background: var(--green-deep); transform: translateY(-1px); }
+  .nav-toggle{ display:none; }
+
+  /* ---------- KEY TAG (signature shape) ---------- */
+  .tag{
+    position: relative;
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: var(--radius-tag);
+  }
+  .tag::before{
+    content:"";
+    position:absolute;
+    top: -8px; left: 20px;
+    width: 16px; height:16px;
+    background: var(--sand);
+    border: 1px solid var(--line);
+    border-radius: 50%;
+  }
+  .tag::after{
+    content:"";
+    position:absolute;
+    top: -3px; left: 26px;
+    width: 4px; height:4px;
+    background: var(--ink);
+    opacity: 0.35;
+    border-radius: 50%;
+  }
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position: relative;
+    padding: 120px 0 100px;
+    overflow: hidden;
+    background:
+      linear-gradient(100deg, rgba(20,16,14,0.90) 0%, rgba(20,16,14,0.72) 38%, rgba(20,16,14,0.30) 68%, rgba(20,16,14,0.12) 100%),
+      url('https://images.unsplash.com/photo-1761319914911-71b059a655d8?fm=jpg&q=70&w=2000&auto=format&fit=crop') center 55% / cover no-repeat;
+  }
+  .hero-grid{ position: relative; z-index: 1; }
+  .hero .btn-ghost{ color: #FFFFFF; border-color: rgba(255,255,255,0.45); }
+  .hero .btn-ghost:hover{ border-color: #FFFFFF; background: rgba(255,255,255,0.08); }
+  .hero .eyebrow{ color: #FFC9C4; }
+  .hero .eyebrow::before{ background: #FFFFFF; }
+  .hero h1{ color: #FFFFFF; }
+  .hero p.lead{ color: rgba(255,255,255,0.82); }
+  .hero-note{ color: rgba(255,255,255,0.68) !important; }
+  .hero-grid{
+    display:grid;
+    grid-template-columns: 1.05fr 0.95fr;
+    gap: 56px;
+    align-items:center;
+  }
+  .hero h1{
+    font-size: clamp(38px, 4.6vw, 60px);
+    margin-top: 18px;
+    max-width: 15ch;
+  }
+  .hero h1 em{
+    font-style: normal;
+    font-weight: 800;
+    color: var(--green-deep);
+  }
+  .hero p.lead{
+    margin-top: 22px;
+    font-size: 18px;
+    color: var(--ink-soft);
+    max-width: 46ch;
+  }
+  .hero-actions{
+    margin-top: 32px;
+    display:flex; gap:16px; flex-wrap:wrap;
+  }
+  .btn{
+    display:inline-flex; align-items:center; gap:8px;
+    padding: 14px 26px;
+    border-radius: 999px;
+    font-size: 15px; font-weight:600;
+    border: 1px solid transparent;
+    cursor:pointer;
+    transition: transform 0.2s ease, background 0.2s ease, border-color .2s ease;
+  }
+  .btn-primary{ background: var(--green); color: var(--paper); }
+  .btn-primary:hover{ background: var(--green-deep); transform: translateY(-2px); }
+  .btn-ghost{ background: transparent; color: var(--ink); border-color: var(--line); }
+  .btn-ghost:hover{ border-color: var(--ink); }
+
+  .hero-note{
+    margin-top: 22px;
+    font-size: 13px; color: var(--ink-faint);
+    display:flex; align-items:center; gap:8px;
+  }
+
+  /* hero visual: hanging key tags */
+  .peg{
+    position:relative;
+    height: 420px;
+  }
+  .peg-rail{
+    position:absolute; top:36px; left:8%; right:8%;
+    height:3px;
+    background: #FFFFFF;
+    opacity:0.5;
+    border-radius:3px;
+  }
+  .peg-rail::before, .peg-rail::after{
+    content:"";
+    position:absolute; top:-5px;
+    width:12px; height:12px; border-radius:50%;
+    background: #FFFFFF; opacity:0.6;
+  }
+  .peg-rail::before{ left:-4px; }
+  .peg-rail::after{ right:-4px; }
+
+  .hang-tag{
+    position:absolute;
+    width: 168px;
+    padding: 18px 18px 20px;
+    transform-origin: top center;
+    animation: sway 6s ease-in-out infinite;
+    box-shadow: 0 20px 40px -12px rgba(0,0,0,0.45);
+  }
+  .hang-tag .string{
+    position:absolute; top:-30px; left:50%;
+    width:1px; height:30px;
+    background: #FFFFFF; opacity:0.55;
+  }
+  .hang-tag .tag-title{
+    font-family:'Space Mono', monospace;
+    font-size: 11px; letter-spacing:0.08em; text-transform:uppercase;
+    color: var(--ink-faint);
+  }
+  .hang-tag .tag-body{
+    font-family:'Poppins', sans-serif;
+    font-size: 17px; font-weight:600; margin-top:8px; color: var(--ink);
+  }
+  .hang-tag.t1{ top: 44px; left: 4%; animation-delay: 0s; }
+  .hang-tag.t2{ top: 44px; left: 34%; width: 150px; animation-delay: 1.1s; }
+  .hang-tag.t3{ top: 44px; left: 63%; animation-delay: 0.5s; }
+
+  @keyframes sway{
+    0%,100%{ transform: rotate(-2.5deg); }
+    50%{ transform: rotate(2.5deg); }
+  }
+
+  /* ---------- SERVICE STRIP ---------- */
+  .strip{
+    background: var(--green-tint);
+    border-top: 1px solid var(--line-soft);
+    border-bottom: 1px solid var(--line-soft);
+    padding: 26px 0;
+  }
+  .strip-inner{
+    display:flex; flex-wrap:wrap; gap: 28px 40px;
+    justify-content:space-between;
+  }
+  .strip-item{
+    display:flex; align-items:center; gap:10px;
+    font-size: 14px; font-weight:600; color: var(--green-deep);
+    flex: 1 1 200px;
+  }
+  .strip-item svg{ flex-shrink:0; }
+
+  /* ---------- SECTION HEADERS ---------- */
+  .sec{ padding: 100px 0; }
+  .sec-head{ max-width: 640px; margin-bottom: 56px; }
+  .sec-head h2{ font-size: clamp(30px, 3.4vw, 42px); margin-top:16px; }
+  .sec-head p{ margin-top:16px; color: var(--ink-soft); font-size:16.5px; }
+
+  /* ---------- HOW IT WORKS ---------- */
+  .steps{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 28px;
+  }
+  .step{
+    padding: 34px 26px 28px;
+    position:relative;
+  }
+  .step .num{
+    font-family:'Space Mono', monospace;
+    font-size: 13px; color: var(--brass); font-weight:700;
+    letter-spacing: 0.06em;
+  }
+  .step h3{ font-size: 21px; margin-top: 14px; }
+  .step p{ margin-top:10px; color: var(--ink-soft); font-size: 15px; }
+  .step-connector{
+    position:absolute; top:50px; right:-24px;
+    width: 20px; color: var(--ink-faint); opacity:0.5;
+  }
+  .step:last-child .step-connector{ display:none; }
+
+  /* ---------- SERVICES GRID ---------- */
+  .services-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 22px;
+  }
+  .service-card{
+    padding: 30px 26px;
+    transition: transform .25s ease, box-shadow .25s ease;
+  }
+  .service-card:hover{ transform: translateY(-4px); box-shadow: var(--shadow-lift); }
+  .service-card .icon-tag{
+    width: 44px; height:44px;
+    background: var(--green-tint);
+    border-radius: 10px;
+    display:flex; align-items:center; justify-content:center;
+    margin-bottom: 18px;
+  }
+  .service-card h3{ font-size: 18px; }
+  .service-card p{ margin-top: 8px; font-size: 14.5px; color: var(--ink-soft); }
+
+  /* ---------- PRICING ---------- */
+  .pricing-grid{
+    display:grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 24px;
+    align-items: stretch;
+  }
+  .pricing-grid-single{
+    grid-template-columns: 1fr;
+    max-width: 420px;
+    margin: 0 auto;
+  }
+  .price-card{
+    padding: 34px 28px 30px;
+    display:flex; flex-direction:column;
+  }
+  .price-card.featured{
+    background: var(--green-deep);
+    border-color: var(--green-deep);
+    color: var(--paper);
+  }
+  .price-card.featured .tag-label{ color: var(--brass-light); }
+  .price-card.featured .price-desc{ color: rgba(255,255,255,0.75); }
+  .price-card.featured li{ color: rgba(255,255,255,0.92); }
+  .price-card.featured li::before{ color: var(--brass-light); }
+  .price-card.featured .btn-ghost{ border-color: rgba(255,255,255,0.4); color: var(--paper); }
+  .price-card.featured .btn-ghost:hover{ border-color: var(--paper); }
+
+  .tag-label{
+    font-family:'Space Mono', monospace;
+    font-size: 12px; letter-spacing:0.1em; text-transform:uppercase;
+    color: var(--brass);
+  }
+  .price-card h3{ font-size: 24px; margin-top:10px; }
+  .price-amt{
+    font-family:'Poppins', sans-serif; font-weight:700;
+    font-size: 40px; margin-top: 16px;
+  }
+  .price-amt span{
+    font-family:'Inter', sans-serif; font-size: 14px; font-weight:500;
+    color: var(--ink-faint); margin-left: 4px;
+  }
+  .price-card.featured .price-amt span{ color: rgba(255,255,255,0.6); }
+  .price-desc{ margin-top: 8px; font-size: 14px; color: var(--ink-soft); }
+  .price-card ul{ list-style:none; margin: 24px 0 28px; padding:0; flex:1; }
+  .price-card li{
+    font-size: 14.5px; color: var(--ink-soft);
+    padding-left: 22px; position:relative;
+    margin-bottom: 12px;
+  }
+  .price-card li::before{
+    content:"✓"; position:absolute; left:0; color: var(--green);
+    font-weight:700;
+  }
+  .price-note{
+    text-align:center; margin-top: 28px; font-size: 13.5px; color: var(--ink-faint);
+  }
+
+  /* ---------- CTA BANNER ---------- */
+  .cta-band{
+    background: var(--ink);
+    color: var(--paper);
+    padding: 80px 0;
+    text-align:center;
+    position:relative;
+    overflow:hidden;
+  }
+  .cta-band h2{
+    font-size: clamp(28px, 3.6vw, 42px);
+    color: var(--paper);
+    max-width: 18ch;
+    margin: 0 auto;
+  }
+  .cta-band p{
+    color: rgba(255,255,255,0.7);
+    margin-top:16px; font-size:16px;
+  }
+  .cta-band .hero-actions{ justify-content:center; margin-top:30px; }
+  .cta-band .btn-ghost{ border-color: rgba(255,255,255,0.35); color:var(--paper); }
+  .cta-band .btn-ghost:hover{ border-color: var(--paper); }
+
+  /* ---------- FOOTER ---------- */
+  footer{
+    padding: 64px 0 32px;
+  }
+  .footer-top{
+    display:grid;
+    grid-template-columns: 1.4fr repeat(3, 1fr);
+    gap: 40px;
+    padding-bottom: 48px;
+    border-bottom: 1px solid var(--line-soft);
+  }
+  .footer-brand p{ margin-top:14px; color: var(--ink-soft); font-size:14px; max-width:32ch; }
+  .footer-col h4{
+    font-family:'Space Mono', monospace;
+    font-size: 12px; letter-spacing:0.1em; text-transform:uppercase;
+    color: var(--ink-faint); margin-bottom:16px; font-weight:400;
+  }
+  .footer-col a{
+    display:block; font-size: 14.5px; color: var(--ink-soft);
+    margin-bottom: 12px;
+  }
+  .footer-col a:hover{ color: var(--green-deep); }
+  .footer-bottom{
+    display:flex; justify-content:space-between; align-items:center;
+    padding-top: 26px; font-size: 13px; color: var(--ink-faint);
+    flex-wrap:wrap; gap:10px;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 880px){
+    .nav-links{ display:none; }
+    .hero-grid{ grid-template-columns: 1fr; }
+    .peg{ height: 260px; margin-top: 20px; }
+    .steps, .services-grid, .pricing-grid{ grid-template-columns: 1fr; }
+    .step-connector{ display:none; }
+    .footer-top{ grid-template-columns: 1fr 1fr; }
+    .sec{ padding: 70px 0; }
+  }
+  @media (max-width: 520px){
+    .wrap{ padding: 0 20px; }
+    .footer-top{ grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="nav-inner">
+    <div class="logo"><svg class="logo-mark" width="28" height="28" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path class="house" d="M17 3 L29 15 V31 H5 V15 Z"/><circle class="keyhole" cx="17" cy="19.5" r="3.2"/><rect class="keyhole" x="15.6" y="21.6" width="2.8" height="7" rx="1"/></svg>Housey</div>
+    <nav class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#how">How it works</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#contact">Contact</a>
+      <a href="#contact" class="nav-cta">Get a free consult</a>
+    </nav>
+  </div>
+</header>
+
+<section class="hero">
+  <div class="wrap hero-grid">
+    <div>
+      <span class="eyebrow">Full-service STR management</span>
+      <h1>Hand us the keys.<br>We'll handle <em>the rest</em>.</h1>
+      <p class="lead">Housey runs your short-term rental end to end — pricing, guest messages, cleaning, maintenance, and the paperwork — so you collect the income without picking up the phone.</p>
+      <div class="hero-actions">
+        <a href="#contact" class="btn btn-primary">Get your free property consult</a>
+        <a href="#how" class="btn btn-ghost">See how it works</a>
+      </div>
+      <div class="hero-note">No long-term lock-in. Cancel with 30 days' notice.</div>
+    </div>
+    <div class="peg" aria-hidden="true">
+      <div class="peg-rail"></div>
+      <div class="hang-tag tag t1">
+        <div class="string"></div>
+        <div class="tag-title">Unit</div>
+        <div class="tag-body">2BR Lakeview</div>
+      </div>
+      <div class="hang-tag tag t2">
+        <div class="string"></div>
+        <div class="tag-title">Status</div>
+        <div class="tag-body">Booked ✓</div>
+      </div>
+      <div class="hang-tag tag t3">
+        <div class="string"></div>
+        <div class="tag-title">Payout</div>
+        <div class="tag-body">On its way</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="strip">
+  <div class="wrap strip-inner">
+    <div class="strip-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M12 2v20M2 12h20" stroke="#FF5A5F" stroke-width="1.6" opacity=".6"/></svg>
+      Dynamic pricing, tuned nightly
+    </div>
+    <div class="strip-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><circle cx="12" cy="12" r="9" stroke="#FF5A5F" stroke-width="1.6"/></svg>
+      24/7 guest messaging
+    </div>
+    <div class="strip-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><path d="M4 12l6 6L20 6" stroke="#FF5A5F" stroke-width="1.8" stroke-linecap="round"/></svg>
+      Vetted cleaning &amp; maintenance crews
+    </div>
+    <div class="strip-item">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none"><rect x="4" y="5" width="16" height="14" rx="2" stroke="#FF5A5F" stroke-width="1.6"/></svg>
+      Monthly owner statements
+    </div>
+  </div>
+</div>
+
+<section class="sec" id="how">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">How it works</span>
+      <h2>From first call to first payout.</h2>
+      <p>Three steps, and a dedicated house manager for every property along the way.</p>
+    </div>
+    <div class="steps">
+      <div class="step tag reveal">
+        <span class="num">01 — Tag your property</span>
+        <h3>We do a walkthrough, free</h3>
+        <p>Tell us the address. We'll assess the space and run a no-obligation pricing analysis before you commit to anything.</p>
+        <span class="step-connector">→</span>
+      </div>
+      <div class="step tag reveal">
+        <span class="num">02 — We take the keys</span>
+        <h3>Listing, photography, setup</h3>
+        <p>Professional photos, optimized listings across Airbnb, Vrbo, and Booking.com, and one house manager assigned to your unit.</p>
+        <span class="step-connector">→</span>
+      </div>
+      <div class="step tag reveal">
+        <span class="num">03 — You get paid</span>
+        <h3>Guests check in, you check out</h3>
+        <p>We handle every message, turnover, and repair call. Your payout and a clear statement land the same week, every month.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="services" style="background: var(--sand-deep); padding-top:0; padding-bottom: 0; margin-top: -30px; padding-top: 100px; padding-bottom: 100px;">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">What we take off your plate</span>
+      <h2>Everything a host would otherwise do at midnight.</h2>
+    </div>
+    <div class="services-grid">
+      <div class="service-card tag reveal">
+        <div class="icon-tag"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><rect x="3" y="6" width="18" height="14" rx="2" stroke="#FF5A5F" stroke-width="1.6"/><path d="M3 9h18" stroke="#FF5A5F" stroke-width="1.6"/></svg></div>
+        <h3>Listing &amp; photography</h3>
+        <p>Professional photos and copy that's optimized for search on every major booking platform.</p>
+      </div>
+      <div class="service-card tag reveal">
+        <div class="icon-tag"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 17l4-8 4 5 3-4 5 7" stroke="#FF5A5F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Dynamic pricing</h3>
+        <p>Nightly rate adjustments based on local demand, seasonality, and events near your property.</p>
+      </div>
+      <div class="service-card tag reveal">
+        <div class="icon-tag"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M21 11.5a8.4 8.4 0 01-8.5 8.5 8.4 8.4 0 01-4-1L4 20l1-4.5a8.4 8.4 0 011-4A8.4 8.4 0 0112.5 3a8.4 8.4 0 018.5 8.5z" stroke="#FF5A5F" stroke-width="1.6"/></svg></div>
+        <h3>Guest messaging, 24/7</h3>
+        <p>Every question, check-in code, and 2am maintenance request handled by a real person — not a bot.</p>
+      </div>
+      <div class="service-card tag reveal">
+        <div class="icon-tag"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M5 12l4 4L19 6" stroke="#FF5A5F" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Cleaning &amp; turnover</h3>
+        <p>A vetted local crew resets the space between every stay, with photo proof after each clean.</p>
+      </div>
+      <div class="service-card tag reveal">
+        <div class="icon-tag"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 3v3M12 18v3M4.2 4.2l2.1 2.1M17.7 17.7l2.1 2.1M3 12h3M18 12h3M4.2 19.8l2.1-2.1M17.7 6.3l2.1-2.1" stroke="#FF5A5F" stroke-width="1.6" stroke-linecap="round"/></svg></div>
+        <h3>Maintenance coordination</h3>
+        <p>Repairs scheduled and supervised through a network of trusted local contractors.</p>
+      </div>
+      <div class="service-card tag reveal">
+        <div class="icon-tag"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M4 4v16h16" stroke="#FF5A5F" stroke-width="1.6" stroke-linecap="round"/><path d="M8 15l3-4 3 2 4-6" stroke="#FF5A5F" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+        <h3>Owner reporting</h3>
+        <p>One clear statement each month — occupancy, revenue, expenses, and your net payout.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="pricing">
+  <div class="wrap">
+    <div class="sec-head reveal">
+      <span class="eyebrow">Pricing</span>
+      <h2>One simple plan. Starts from 14%.</h2>
+      <p>Whether you're just getting started with short-let hosting or joining for the long term, there's a plan just for you.</p>
+    </div>
+    <div class="pricing-grid pricing-grid-single">
+      <div class="price-card tag featured reveal">
+        <span class="tag-label">Full-Service</span>
+        <h3>Hands-off hosting</h3>
+        <div class="price-amt">From 14%<span>of booking revenue</span></div>
+        <p class="price-desc">One plan, everything included — pricing, messaging, cleaning, maintenance, and reporting, with a dedicated house manager on call.</p>
+        <ul>
+          <li>Listing setup &amp; photography</li>
+          <li>Dynamic pricing</li>
+          <li>24/7 guest messaging</li>
+          <li>Cleaning &amp; turnover crew</li>
+          <li>Maintenance coordination</li>
+          <li>Monthly owner statement</li>
+          <li>Dedicated house manager</li>
+        </ul>
+        <a href="#contact" class="btn btn-ghost">Get your free consult</a>
+      </div>
+    </div>
+    <p class="price-note">Final rate depends on property type, location, and length of term — get in touch for an exact quote.</p>
+  </div>
+</section>
+
+<section class="cta-band" id="contact">
+  <div class="wrap">
+    <h2>Ready to stop managing and start earning?</h2>
+    <p>Tell us about your property. We'll follow up within one business day with a free consult and pricing estimate.</p>
+    <div class="hero-actions">
+      <a href="mailto:hello@houseyz.com.au" class="btn btn-primary">Email hello@houseyz.com.au</a>
+      <a href="tel:+611300312524" class="btn btn-ghost">Call us</a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <div class="logo"><svg class="logo-mark" width="28" height="28" viewBox="0 0 34 34" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><path class="house" d="M17 3 L29 15 V31 H5 V15 Z"/><circle class="keyhole" cx="17" cy="19.5" r="3.2"/><rect class="keyhole" x="15.6" y="21.6" width="2.8" height="7" rx="1"/></svg>Housey</div>
+        <p>Full-service short-term rental management for owners who'd rather collect the income than answer the messages.</p>
+      </div>
+      <div class="footer-col">
+        <h4>Company</h4>
+        <a href="#how">How it works</a>
+        <a href="#services">Services</a>
+        <a href="#pricing">Pricing</a>
+      </div>
+      <div class="footer-col">
+        <h4>Services</h4>
+        <a href="#services">Guest messaging</a>
+        <a href="#services">Cleaning &amp; turnover</a>
+        <a href="#services">Owner reporting</a>
+      </div>
+      <div class="footer-col">
+        <h4>Contact</h4>
+        <a href="mailto:hello@houseyz.com.au">hello@houseyz.com.au</a>
+        <a href="tel:+611300312524">1300 312 524</a>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>© 2026 Housey. All rights reserved.</span>
+      <span>Made for hosts who'd rather be somewhere else.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+  const io = new IntersectionObserver((entries)=>{
+    entries.forEach(e=>{
+      if(e.isIntersecting){ e.target.classList.add('in'); io.unobserve(e.target); }
+    });
+  }, { threshold: 0.15 });
+  document.querySelectorAll('.reveal').forEach(el=> io.observe(el));
+</script>
+
+</body>
+</html>
